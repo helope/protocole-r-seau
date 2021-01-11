@@ -102,11 +102,11 @@ while True:
         if p_msg.type == "ch2":
             microbit.display.scroll("Ch2", wait=False, loop=False)
             msg_r = decrypt(p_msg.msg)
-                if msg_r == "established":
-                    connect = True
-                    microbit.display.scroll(msg_r, wait=False, loop=False)
+            if msg_r == "established":
+                connect = True
+                microbit.display.scroll(msg_r, wait=False, loop=False)
         
-        if p_msg.type == "msg" and connect = True:
+        if p_msg.type == "msg" and connect == True:
             print("msg")
         #    msg = decrypt(receivedMsg)
         #    microbit.display.scroll(msg, wait=False, loop=True)
