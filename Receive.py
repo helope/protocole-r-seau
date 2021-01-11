@@ -4,8 +4,7 @@ from microbit import sleep
 
 radio.on()
 
-crypt = False
-chan = False
+connect = False
 #key = "IY546G6ZAubNFiua4zhef78p4afeaZRG"
 key = ""
 
@@ -85,27 +84,29 @@ while True:
     receivedMsg = radio.receive()
     if receivedMsg:
         p_msg = parse(receivedMsg)
+        
         if p_msg.type == "key":
-            microbit.display.scroll("Key OK", wait=False, loop=False)
             key = p_msg.msg
             radio.send("keyOK")
-            microbit.display.scroll("Send", wait=False, loop=False)
+        
         if p_msg.type == "ch1":
-            microbit.display.scroll("receive", wait=False, loop=False)
             msg = decrypt(p_msg.msg)
             send_txt = encrypt("OK")
             #radio.send(send_txt)
-            send_msg="ch1"+msg
+            send_msg="ch1"+send_txt
             radio.send(send_msg)
             #display.set_pixel(2, 2, 5)
-            #radio.config(channel=10)
-            radio.config(channel=int(msg))
-            microbit.display.scroll("Channel Ok", wait=False, loop=False)
+            radio.config(channel=10)
+            #radio.config(channel=int(msg))
+        
         if p_msg.type == "ch2":
-            msg = decrypt(p_msg.msg)
-            microbit.display.scroll(p_msg.msg, wait=False, loop=False)
-
-        if p_msg.type == "msg":
+            microbit.display.scroll("Ch2", wait=False, loop=False)
+            msg_r = decrypt(p_msg.msg)
+                if msg_r == "established":
+                    connect = True
+                    microbit.display.scroll(msg_r, wait=False, loop=False)
+        
+        if p_msg.type == "msg" and connect = True:
             print("msg")
         #    msg = decrypt(receivedMsg)
         #    microbit.display.scroll(msg, wait=False, loop=True)

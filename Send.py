@@ -5,8 +5,7 @@ import random
 
 radio.on()
 
-crypt = False
-chan = False
+connect = False
 key = "IY546G6ZAubNFiua4zhef78p4afeaZRG"
 
 class Msg:
@@ -82,18 +81,29 @@ while True:
     receivedMsg = radio.receive()
     if receivedMsg:
         p_msg = parse(receivedMsg)
+        
         if p_msg.type == "key":
-            microbit.display.scroll("Key Ok", wait=False, loop=False)
-            random_channel = random.randint(0,83)
-            #msg = encrypt("10")
-            msg = encrypt(str(random_channel))
-            send_msg="ch1"+msg
-            radio.send(send_msg)
-            microbit.display.scroll("Send", wait=False, loop=False)
+            if p_msg.msg == "OK":
+                microbit.display.scroll("Key Ok", wait=False, loop=False)
+                random_channel = random.randint(0,83)
+                #msg = encrypt("10")
+                msg = encrypt(str(random_channel))
+                send_msg="ch1"+msg
+                radio.send(send_msg)
+            else:
+                send_msg="key"+key
+                radio.send(send_msg)
         if p_msg.type == "ch1":
             msg = decrypt(p_msg.msg)
-            radio.config(channel=int(random_channel))
-            microbit.display.scroll("Channel OK", wait=False, loop=False)
-            msg = encrypt("established")  
-            send_msg = "ch1"+msg
-            radio.send(send_msg)
+            if msg == "OK":
+                microbit.display.scroll(random_channel, wait=False, loop=False)
+                send_txt = encrypt("established")
+                send_msg ="ch2"+send_txt
+                radio.config(channel=10)
+                #radio.config(channel=int(random_channel))
+                radio.send(send_msg)
+                microbit.display.scroll("Send", wait=False, loop=False)
+                connect = True
+            else:
+                send_msg="key"+key
+                radio.send(send_msg)
