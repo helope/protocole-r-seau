@@ -90,18 +90,23 @@ while True:
             key = p_msg.msg
             radio.send("keyOK")
             microbit.display.scroll("Send", wait=False, loop=False)
-        if p_msg.type == "chan":
+        if p_msg.type == "ch1":
             microbit.display.scroll("receive", wait=False, loop=False)
             msg = decrypt(p_msg.msg)
             send_txt = encrypt("OK")
             #radio.send(send_txt)
-            send_msg="chan"+msg
+            send_msg="ch1"+msg
             radio.send(send_msg)
             #display.set_pixel(2, 2, 5)
-            radio.config(channel=10)
+            #radio.config(channel=10)
+            radio.config(channel=int(msg))
             microbit.display.scroll("Channel Ok", wait=False, loop=False)
+        if p_msg.type == "ch2":
+            msg = decrypt(p_msg.msg)
+            microbit.display.scroll(p_msg.msg, wait=False, loop=False)
 
-        #else:
+        if p_msg.type == "msg":
+            print("msg")
         #    msg = decrypt(receivedMsg)
         #    microbit.display.scroll(msg, wait=False, loop=True)
 

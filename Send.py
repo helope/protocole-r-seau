@@ -1,6 +1,7 @@
 import radio
 import microbit
 from microbit import sleep
+import random
 
 radio.on()
 
@@ -83,11 +84,16 @@ while True:
         p_msg = parse(receivedMsg)
         if p_msg.type == "key":
             microbit.display.scroll("Key Ok", wait=False, loop=False)
-            msg = encrypt("10")
-            send_msg="chan"+msg
+            random_channel = random.randint(0,83)
+            #msg = encrypt("10")
+            msg = encrypt(str(random_channel))
+            send_msg="ch1"+msg
             radio.send(send_msg)
             microbit.display.scroll("Send", wait=False, loop=False)
-        if p_msg.type == "chan":
+        if p_msg.type == "ch1":
             msg = decrypt(p_msg.msg)
-            radio.config(channel=10)
+            radio.config(channel=int(random_channel))
             microbit.display.scroll("Channel OK", wait=False, loop=False)
+            msg = encrypt("established")  
+            send_msg = "ch1"+msg
+            radio.send(send_msg)
